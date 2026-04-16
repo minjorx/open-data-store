@@ -9,10 +9,13 @@ body{font-family:system-ui;max-width:700px;margin:0 auto;padding:20px;font-size:
 a{color:#0969da;text-decoration:none}
 a:hover{text-decoration:underline}
 .info{color:#666;font-size:12px}
-h2{margin:16px 0 6px;font-size:1em;color:#555}
 ul{list-style:none;padding-left:16px}
-li{margin:4px 0}
+li{margin:3px 0}
 li.directory>a{font-weight:500}
+.toggle{color:#888;cursor:pointer;margin-right:4px;font-size:12px;user-select:none}
+.toggle:hover{color:#0969da}
+.nested{display:none}
+.expanded>.nested{display:block}
 </style>
 </head>
 <body>
@@ -25,6 +28,7 @@ li.directory>a{font-weight:500}
 <script>
 const base = 'https://cdn.jsdelivr.net/gh/minjorx/open-data-store/storage/';
 const repo = 'minjorx/open-data-store';
+const MAX_DEPTH = 3;
 
 function formatSize(bytes) {
   if (!bytes) return '';
@@ -33,30 +37,46 @@ function formatSize(bytes) {
   return (bytes / 1024 / 1024).toFixed(1) + 'MB';
 }
 
-async function loadDir(path, el) {
-  const ul = document.createElement('ul');
-  el.appendChild(ul);
+function toggle(el) {
+  el.classList.toggle('expanded');
+  const btn = el.querySelector('.toggle');
+  btn.textContent = el.classList.contains('expanded') ? '▼' : '▶';
+}
 
+async function loadDir(path, parentUl, depth) {
   const r = await fetch(base + path + 'index.json');
   const items = await r.json();
 
-  items.forEach(f => {
+  items.sort((a,b) => (a.type===b.type) ? a.name.localeCompare(b.name) : (a.type==='dir' ? -1 : 1));
+
+  for (const f of items) {
     const li = document.createElement('li');
     if (f.type === 'dir') {
       li.className = 'directory';
-      li.innerHTML = `<a href="https://github.com/minjorx/open-data-store/tree/main/storage/${path}${f.name}">📁 ${f.name}/</a>`;
-      ul.appendChild(li);
-      loadDir(path + f.name + '/', li);  // pass li as new parent (creates nested ul inside it)
+      li.innerHTML = `<span class="toggle">▶</span><a href="https://github.com/minjorx/open-data-store/tree/main/storage/${path}${f.name}">📁 ${f.name}/</a>`;
+      parentUl.appendChild(li);
+      li.querySelector('.toggle').onclick = () => toggle(li);
+      const nestedUl = document.createElement('ul');
+      nestedUl.className = 'nested';
+      li.appendChild(nestedUl);
+
+      if (depth < MAX_DEPTH - 1) {
+        li.classList.add('expanded');
+        li.querySelector('.toggle').textContent = '▼';
+        await loadDir(path + f.name + '/', nestedUl, depth + 1);
+      }
     } else {
-      li.innerHTML = `<a href="https://raw.githubusercontent.com/${repo}/main/storage/${path}${f.name}" download>📄 ${f.name}</a>` +
+      li.innerHTML = `<span class="toggle" style="visibility:hidden">▶</span><a href="https://raw.githubusercontent.com/${repo}/main/storage/${path}${f.name}" download>📄 ${f.name}</a>` +
         `<span class="info"> · ${formatSize(f.size)}</span>` +
         ` · <a href="https://github.com/${repo}/blob/main/storage/${path}${f.name}">src</a>`;
-      ul.appendChild(li);
+      parentUl.appendChild(li);
     }
-  });
+  }
 }
 
-loadDir('', document.getElementById('tree'));
+loadDir('', document.getElementById('tree'), 0).catch(() => {
+  document.getElementById('tree').innerHTML = '<li style="color:#666">Failed to load</li>';
+});
 </script>
 </body>
 </html>
