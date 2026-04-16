@@ -10,39 +10,56 @@ a{color:#0969da;text-decoration:none}
 a:hover{text-decoration:underline}
 .info{color:#666;font-size:12px}
 h2{margin:16px 0 6px;font-size:1em;color:#555}
-ul{list-style:none}
-li{margin:5px 0}
+ul{list-style:none;padding-left:16px}
+li{margin:4px 0}
+li.directory>a{font-weight:500}
+.btns{margin-left:6px;font-size:12px;color:#666}
 </style>
 </head>
 <body>
 <a href="../" style="font-size:13px">← Back</a>
 <h1 style="margin:12px 0 4px">Storage</h1>
-<p style="color:#666;font-size:13px;margin-bottom:16px">Data lake + metrics</p>
-
-<h2>data-lake</h2>
-<ul id="data-lake"></ul>
-
-<h2>metrics</h2>
-<ul id="metrics"></ul>
-
+<p style="color:#666;font-size:13px;margin-bottom:16px">Data lake + metrics · <a href="https://github.com/minjorx/open-data-store/tree/main/storage">view on github</a></p>
+<div id="tree"></div>
 <script>
 const repo='minjorx/open-data-store';
-function load(el,path){
-  fetch(`https://api.github.com/repos/${repo}/contents/${path}`)
-  .then(r=>r.json())
-  .then(files=>{
-    if(!files.length){document.getElementById(el).innerHTML='<li style="color:#666">empty';return;}
-    files.forEach(f=>{
-      const li=document.createElement('li');
-      li.innerHTML=`<a href="https://raw.githubusercontent.com/${repo}/main/${path}/` + f.name + `">${f.name}</a>` +
-        (f.type==='file'?`<span class="info"> · ${f.size||0}B</span>`:'') +
-        ` · <a href="https://github.com/${repo}/blob/main/${path}/` + f.name + `" style="font-size:12px">src</a>`;
-      document.getElementById(el).appendChild(li);
-    });
+const base='storage/';
+
+async function fetchDir(path, el, indent=0) {
+  let items;
+  try {
+    const r = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`);
+    items = await r.json();
+    if (!Array.isArray(items)) return;
+  } catch(e) { return; }
+
+  items.sort((a,b) => (a.type===b.type) ? a.name.localeCompare(b.name) : (a.type==='dir' ? -1 : 1));
+
+  items.forEach(f => {
+    const li = document.createElement('li');
+    const isDir = f.type === 'dir';
+    const indentPx = indent * 16;
+
+    if (isDir) {
+      li.className = 'directory';
+      li.innerHTML = `<a href="https://github.com/minjorx/open-data-store/tree/main/${f.path}" style="padding-left:${indentPx}px">📁 ${f.name}/</a>` +
+        `<span class="btns"> · <a href="https://github.com/minjorx/open-data-store/archive/refs/heads/main/${f.path}.zip" download>zip</a></span>`;
+      el.appendChild(li);
+      const subUl = document.createElement('ul');
+      li.appendChild(subUl);
+      fetchDir(f.path, subUl, indent + 1);
+    } else {
+      const size = f.size ? f.size + 'B' : '';
+      li.innerHTML = `<a href="https://raw.githubusercontent.com/${repo}/main/${f.path}" download style="padding-left:${indentPx}px">📄 ${f.name}</a>` +
+        (size ? `<span class="info"> · ${size}</span>` : '') +
+        ` · <a href="https://github.com/minjorx/open-data-store/blob/main/${f.path}">src</a>`;
+      el.appendChild(li);
+    }
   });
 }
-load('data-lake','storage/data-lake');
-load('metrics','storage/metrics');
+
+const tree = document.getElementById('tree');
+fetchDir(base, tree);
 </script>
 </body>
 </html>
