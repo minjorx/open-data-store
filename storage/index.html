@@ -13,53 +13,28 @@ h2{margin:16px 0 6px;font-size:1em;color:#555}
 ul{list-style:none;padding-left:16px}
 li{margin:4px 0}
 li.directory>a{font-weight:500}
-.btns{margin-left:6px;font-size:12px;color:#666}
 </style>
 </head>
 <body>
 <a href="../" style="font-size:13px">← Back</a>
 <h1 style="margin:12px 0 4px">Storage</h1>
 <p style="color:#666;font-size:13px;margin-bottom:16px">Data lake + metrics · <a href="https://github.com/minjorx/open-data-store/tree/main/storage">view on github</a></p>
-<div id="tree"></div>
-<script>
-const repo='minjorx/open-data-store';
-const base='storage/';
 
-async function fetchDir(path, el, indent=0) {
-  let items;
-  try {
-    const r = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`);
-    items = await r.json();
-    if (!Array.isArray(items)) return;
-  } catch(e) { return; }
+<h2>data-lake</h2>
+<ul>
+<li class="directory"><a href="https://github.com/minjorx/open-data-store/tree/main/storage/data-lake">📁 data-lake/</a></li>
+<ul>
+<li><a href="https://raw.githubusercontent.com/minjorx/open-data-store/main/storage/data-lake/raw/2026-04-08-worldbank-population.csv" download>📄 2026-04-08-worldbank-population.csv</a> <span class="info">· 194KB</span></li>
+<li><a href="https://raw.githubusercontent.com/minjorx/open-data-store/main/storage/data-lake/raw/2026-04-08-worldbank-population-country-metadata.csv" download>📄 2026-04-08-worldbank-population-country-metadata.csv</a> <span class="info">· 62KB</span></li>
+<li><a href="https://raw.githubusercontent.com/minjorx/open-data-store/main/storage/data-lake/raw/2026-04-08-worldbank-population-indicator-metadata.csv" download>📄 2026-04-08-worldbank-population-indicator-metadata.csv</a> <span class="info">· 894B</span></li>
+</ul>
+</ul>
 
-  items.sort((a,b) => (a.type===b.type) ? a.name.localeCompare(b.name) : (a.type==='dir' ? -1 : 1));
+<h2>metrics</h2>
+<ul>
+<li style="color:#666">(empty)</li>
+</ul>
 
-  items.forEach(f => {
-    const li = document.createElement('li');
-    const isDir = f.type === 'dir';
-    const indentPx = indent * 16;
-
-    if (isDir) {
-      li.className = 'directory';
-      li.innerHTML = `<a href="https://github.com/minjorx/open-data-store/tree/main/${f.path}" style="padding-left:${indentPx}px">📁 ${f.name}/</a>` +
-        `<span class="btns"> · <a href="https://github.com/minjorx/open-data-store/tree/main/${f.path}">browse</a></span>`;
-      el.appendChild(li);
-      const subUl = document.createElement('ul');
-      li.appendChild(subUl);
-      fetchDir(f.path, subUl, indent + 1);
-    } else {
-      const size = f.size ? f.size + 'B' : '';
-      li.innerHTML = `<a href="https://raw.githubusercontent.com/${repo}/main/${f.path}" download style="padding-left:${indentPx}px">📄 ${f.name}</a>` +
-        (size ? `<span class="info"> · ${size}</span>` : '') +
-        ` · <a href="https://github.com/minjorx/open-data-store/blob/main/${f.path}">src</a>`;
-      el.appendChild(li);
-    }
-  });
-}
-
-const tree = document.getElementById('tree');
-fetchDir(base, tree);
-</script>
+<p style="margin-top:20px;font-size:13px"><a href="https://github.com/minjorx/open-data-store/archive/refs/heads/main/storage.zip">📦 Download storage/ as zip</a></p>
 </body>
 </html>

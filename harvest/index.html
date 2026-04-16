@@ -11,52 +11,17 @@ a:hover{text-decoration:underline}
 .info{color:#666;font-size:12px}
 ul{list-style:none;padding-left:16px}
 li{margin:4px 0}
-li.directory>a{font-weight:500}
-.btns{margin-left:6px;font-size:12px;color:#666}
 </style>
 </head>
 <body>
 <a href="../" style="font-size:13px">← Back</a>
 <h1 style="margin:12px 0 4px">Harvest</h1>
 <p style="color:#666;font-size:13px;margin-bottom:16px">Node.js data collection scripts · <a href="https://github.com/minjorx/open-data-store/tree/main/harvest">view on github</a></p>
-<ul id="files"></ul>
-<script>
-const repo='minjorx/open-data-store';
-const base='harvest/';
 
-async function fetchDir(path, el, indent=0) {
-  let items;
-  try {
-    const r = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`);
-    items = await r.json();
-    if (!Array.isArray(items)) return;
-  } catch(e) { return; }
+<ul>
+<li style="color:#666">(no scripts yet)</li>
+</ul>
 
-  items.sort((a,b) => (a.type===b.type) ? a.name.localeCompare(b.name) : (a.type==='dir' ? -1 : 1));
-
-  items.forEach(f => {
-    const li = document.createElement('li');
-    const isDir = f.type === 'dir';
-    const indentPx = indent * 16;
-
-    if (isDir) {
-      li.className = 'directory';
-      li.innerHTML = `<a href="https://github.com/minjorx/open-data-store/tree/main/${f.path}" style="padding-left:${indentPx}px">📁 ${f.name}/</a>` +
-        `<span class="btns"> · <a href="https://github.com/minjorx/open-data-store/tree/main/${f.path}">browse</a></span>`;
-      el.appendChild(li);
-      const subUl = document.createElement('ul');
-      li.appendChild(subUl);
-      fetchDir(f.path, subUl, indent + 1);
-    } else {
-      li.innerHTML = `<a href="https://raw.githubusercontent.com/${repo}/main/${f.path}" download style="padding-left:${indentPx}px">📄 ${f.name}</a>` +
-        (f.size ? `<span class="info"> · ${f.size}B</span>` : '') +
-        ` · <a href="https://github.com/minjorx/open-data-store/blob/main/${f.path}">src</a>`;
-      el.appendChild(li);
-    }
-  });
-}
-
-fetchDir(base, document.getElementById('files'));
-</script>
+<p style="margin-top:20px;font-size:13px"><a href="https://github.com/minjorx/open-data-store/archive/refs/heads/main/harvest.zip">📦 Download harvest/ as zip</a></p>
 </body>
 </html>
