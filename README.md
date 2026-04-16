@@ -13,3 +13,36 @@ Public dataset repository. Supports CSV / JSON / SQLite / MD formats.
 ## Formats
 
 CSV, JSON, SQLite, MD
+
+## Project Norms
+
+### Display Config Format
+
+```json
+{
+  "type": "line",
+  "style": { "color": "#0969da", "title": "Example" },
+  "data": "./../storage/metrics/example.csv"
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| `type` | Chart type: `line` `bar` `pie` `scatter` `table` |
+| `style` | Color, size, theme, title |
+| `data` | Relative path to data file in `storage/` |
+
+### Storage Structure
+
+```
+storage/
+├── data-lake/       # Raw data, organized by source/type
+│   └── raw/         # Unprocessed source files
+└── metrics/         # Processed, structured data
+```
+
+### File Naming
+
+- Lowercase with hyphens: `example-data.csv`
+- Include date prefix for time-series: `YYYY-MM-DD-description.csv`
+- No spaces or Chinese characters in file names
