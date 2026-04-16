@@ -1,0 +1,4 @@
+[
+  { "name": "data-lake", "type": "dir" },
+  { "name": "metrics", "type": "dir" }
+]

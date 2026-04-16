@@ -1,0 +1,6 @@
+[
+  { "name": "raw", "type": "dir" },
+  { "name": "2026-04-08-worldbank-population.csv", "type": "file", "size": 194613 },
+  { "name": "2026-04-08-worldbank-population-country-metadata.csv", "type": "file", "size": 62504 },
+  { "name": "2026-04-08-worldbank-population-indicator-metadata.csv", "type": "file", "size": 894 }
+]

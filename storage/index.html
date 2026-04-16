@@ -20,21 +20,48 @@ li.directory>a{font-weight:500}
 <h1 style="margin:12px 0 4px">Storage</h1>
 <p style="color:#666;font-size:13px;margin-bottom:16px">Data lake + metrics · <a href="https://github.com/minjorx/open-data-store/tree/main/storage">view on github</a></p>
 
-<h2>data-lake</h2>
-<ul>
-<li class="directory"><a href="https://github.com/minjorx/open-data-store/tree/main/storage/data-lake">📁 data-lake/</a></li>
-<ul>
-<li><a href="https://raw.githubusercontent.com/minjorx/open-data-store/main/storage/data-lake/raw/2026-04-08-worldbank-population.csv" download>📄 2026-04-08-worldbank-population.csv</a> <span class="info">· 194KB</span></li>
-<li><a href="https://raw.githubusercontent.com/minjorx/open-data-store/main/storage/data-lake/raw/2026-04-08-worldbank-population-country-metadata.csv" download>📄 2026-04-08-worldbank-population-country-metadata.csv</a> <span class="info">· 62KB</span></li>
-<li><a href="https://raw.githubusercontent.com/minjorx/open-data-store/main/storage/data-lake/raw/2026-04-08-worldbank-population-indicator-metadata.csv" download>📄 2026-04-08-worldbank-population-indicator-metadata.csv</a> <span class="info">· 894B</span></li>
-</ul>
-</ul>
+<div id="tree"></div>
 
-<h2>metrics</h2>
-<ul>
-<li style="color:#666">(empty)</li>
-</ul>
+<script>
+const base = 'https://cdn.jsdelivr.net/gh/minjorx/open-data-store/storage/';
+const repo = 'minjorx/open-data-store';
 
-<p style="margin-top:20px;font-size:13px"><a href="https://github.com/minjorx/open-data-store/archive/refs/heads/main/storage.zip">📦 Download storage/ as zip</a></p>
+function formatSize(bytes) {
+  if (!bytes) return '';
+  if (bytes < 1024) return bytes + 'B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + 'KB';
+  return (bytes / 1024 / 1024).toFixed(1) + 'MB';
+}
+
+async function loadDir(path, el, heading) {
+  if (heading) {
+    const h = document.createElement('h2');
+    h.textContent = heading;
+    el.appendChild(h);
+  }
+  const ul = document.createElement('ul');
+  el.appendChild(ul);
+
+  const r = await fetch(base + path + 'index.json');
+  const items = await r.json();
+
+  items.forEach(f => {
+    const li = document.createElement('li');
+    if (f.type === 'dir') {
+      li.className = 'directory';
+      li.innerHTML = `<a href="https://github.com/minjorx/open-data-store/tree/main/storage/${path}${f.name}">📁 ${f.name}/</a>`;
+      el.appendChild(li);
+      loadDir(path + f.name + '/', el, null);
+    } else {
+      li.innerHTML = `<a href="https://raw.githubusercontent.com/${repo}/main/storage/${path}${f.name}" download>📄 ${f.name}</a>` +
+        `<span class="info"> · ${formatSize(f.size)}</span>` +
+        ` · <a href="https://github.com/${repo}/blob/main/storage/${path}${f.name}">src</a>`;
+      ul.appendChild(li);
+    }
+  });
+}
+
+loadDir('', document.getElementById('tree'), 'data-lake');
+</script>
 </body>
 </html>

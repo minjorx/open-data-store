@@ -18,10 +18,38 @@ li{margin:4px 0}
 <h1 style="margin:12px 0 4px">Harvest</h1>
 <p style="color:#666;font-size:13px;margin-bottom:16px">Node.js data collection scripts · <a href="https://github.com/minjorx/open-data-store/tree/main/harvest">view on github</a></p>
 
-<ul>
-<li style="color:#666">(no scripts yet)</li>
-</ul>
+<ul id="files"></ul>
 
-<p style="margin-top:20px;font-size:13px"><a href="https://github.com/minjorx/open-data-store/archive/refs/heads/main/harvest.zip">📦 Download harvest/ as zip</a></p>
+<script>
+const base = 'https://cdn.jsdelivr.net/gh/minjorx/open-data-store/harvest/';
+const repo = 'minjorx/open-data-store';
+
+function formatSize(bytes) {
+  if (!bytes) return '';
+  if (bytes < 1024) return bytes + 'B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + 'KB';
+  return (bytes / 1024 / 1024).toFixed(1) + 'MB';
+}
+
+const r = await fetch(base + 'index.json');
+const items = await r.json();
+const el = document.getElementById('files');
+
+if (!items.length) {
+  el.innerHTML = '<li style="color:#666">(no scripts yet)</li>';
+} else {
+  items.forEach(f => {
+    const li = document.createElement('li');
+    if (f.type === 'dir') {
+      li.innerHTML = `<a href="https://github.com/${repo}/tree/main/harvest/${f.name}">📁 ${f.name}/</a>`;
+    } else {
+      li.innerHTML = `<a href="https://raw.githubusercontent.com/${repo}/main/harvest/${f.name}" download>📄 ${f.name}</a>` +
+        (f.size ? `<span class="info"> · ${formatSize(f.size)}</span>` : '') +
+        ` · <a href="https://github.com/${repo}/blob/main/harvest/${f.name}">src</a>`;
+    }
+    el.appendChild(li);
+  });
+}
+</script>
 </body>
 </html>
