@@ -2,44 +2,47 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Storage - File Listing</title>
+<title>Storage</title>
 <style>
-body{font-family:system-ui;max-width:800px;margin:40px auto;padding:0 20px}
-h1{border-bottom:1px solid #ddd;padding-bottom:10px}
-h2{margin-top:30px;color:#555}
-a{display:block;padding:8px 0;color:#333;text-decoration:none}
-a:hover{color:#0969da}
-.info{color:#666;font-size:14px;margin-top:5px}
-.back{color:#0969da;margin-bottom:20px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui;max-width:700px;margin:0 auto;padding:20px;font-size:14px;color:#222}
+a{color:#0969da;text-decoration:none}
+a:hover{text-decoration:underline}
+.info{color:#666;font-size:12px}
+h2{margin:16px 0 6px;font-size:1em;color:#555}
+ul{list-style:none}
+li{margin:5px 0}
 </style>
 </head>
 <body>
-<a href="../" class="back">← Back</a>
-<h1>Storage</h1>
-<p>Data lake and metrics storage. Browse or download files.</p>
+<a href="../" style="font-size:13px">← Back</a>
+<h1 style="margin:12px 0 4px">Storage</h1>
+<p style="color:#666;font-size:13px;margin-bottom:16px">Data lake + metrics</p>
 
-<h2>Data Lake</h2>
-<div id="data-lake"></div>
+<h2>data-lake</h2>
+<ul id="data-lake"></ul>
 
-<h2>Metrics</h2>
-<div id="metrics"></div>
+<h2>metrics</h2>
+<ul id="metrics"></ul>
 
 <script>
-const repo = 'minjorx/open-data-store';
-async function loadDir(elId, path) {
-  const r = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`);
-  const files = await r.json();
-  const el = document.getElementById(elId);
-  if (!files.length) { el.innerHTML = 'empty'; return; }
-  files.forEach(f => {
-    const a = document.createElement('a');
-    a.href = `https://raw.githubusercontent.com/${repo}/main/${path}/` + f.name;
-    a.innerHTML = `<strong>${f.name}</strong><div class="info">${f.type === 'dir' ? 'directory' : 'file · ' + (f.size||0) + ' bytes'} · <a href="https://github.com/${repo}/blob/main/${path}/` + f.name + '">view</a></div>';
-    el.appendChild(a);
+const repo='minjorx/open-data-store';
+function load(el,path){
+  fetch(`https://api.github.com/repos/${repo}/contents/${path}`)
+  .then(r=>r.json())
+  .then(files=>{
+    if(!files.length){document.getElementById(el).innerHTML='<li style="color:#666">empty';return;}
+    files.forEach(f=>{
+      const li=document.createElement('li');
+      li.innerHTML=`<a href="https://raw.githubusercontent.com/${repo}/main/${path}/` + f.name + `">${f.name}</a>` +
+        (f.type==='file'?`<span class="info"> · ${f.size||0}B</span>`:'') +
+        ` · <a href="https://github.com/${repo}/blob/main/${path}/` + f.name + `" style="font-size:12px">src</a>`;
+      document.getElementById(el).appendChild(li);
+    });
   });
 }
-loadDir('data-lake', 'storage/data-lake');
-loadDir('metrics', 'storage/metrics');
+load('data-lake','storage/data-lake');
+load('metrics','storage/metrics');
 </script>
 </body>
 </html>

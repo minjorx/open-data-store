@@ -4,29 +4,25 @@
 <meta charset="utf-8">
 <title>open-data-store</title>
 <style>
-body{font-family:system-ui;max-width:700px;margin:60px auto;padding:0 20px}
-h1{font-size:2em;margin-bottom:.5em}
-.card{display:inline-block;width:180px;padding:20px;border:1px solid #ddd;border-radius:8px;margin:8px;text-decoration:none;color:#333}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui;max-width:700px;margin:0 auto;padding:20px;font-size:14px;color:#222}
+h1{margin:16px 0 8px;font-size:1.5em}
+p{color:#666;margin-bottom:16px}
+.cards{display:flex;gap:12px;flex-wrap:wrap}
+a{text-decoration:none}
+.card{display:inline-block;padding:14px 18px;border:1px solid #ddd;border-radius:6px;color:#333;min-width:120px}
 .card:hover{border-color:#0969da;color:#0969da}
-.card h3{margin:0 0 8px}
-.card p{margin:0;font-size:14px;color:#666}
+.card h3{margin:0;font-size:1em}
+.card p{margin:4px 0 0;color:#666;font-size:13px}
 </style>
 </head>
 <body>
 <h1>open-data-store</h1>
-<p>Public dataset repository · CSV / JSON / SQLite / MD</p>
-<br>
-<a class="card" href="display/">
-  <h3>📊 Display</h3>
-  <p>Chart configs</p>
-</a>
-<a class="card" href="harvest/">
-  <h3>🌾 Harvest</h3>
-  <p>Collection scripts</p>
-</a>
-<a class="card" href="storage/">
-  <h3>💾 Storage</h3>
-  <p>Data lake + metrics</p>
-</a>
+<p>CSV · JSON · SQLite · MD</p>
+<div class="cards">
+<a class="card" href="display/"><h3>📊 Display</h3><p>Chart configs</p></a>
+<a class="card" href="harvest/"><h3>🌾 Harvest</h3><p>Collection scripts</p></a>
+<a class="card" href="storage/"><h3>💾 Storage</h3><p>Data lake + metrics</p></a>
+</div>
 </body>
 </html>

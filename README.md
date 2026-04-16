@@ -16,6 +16,8 @@ CSV, JSON, SQLite, MD
 
 ## Project Norms
 
+**Style: Compact. No bloat.**
+
 ### Display Config Format
 
 ```json
