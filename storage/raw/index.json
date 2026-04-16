@@ -1,3 +1,6 @@
 [
-  { "name": "worldbank", "type": "dir" }
+  {
+    "name": "worldbank",
+    "type": "dir"
+  }
 ]

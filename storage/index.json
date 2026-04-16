@@ -1,4 +1,20 @@
 [
-  { "name": "raw", "type": "dir" },
-  { "name": "metrics", "type": "dir" }
+  {
+    "name": "README.md",
+    "type": "file",
+    "size": 736
+  },
+  {
+    "name": "index.html",
+    "type": "file",
+    "size": 2993
+  },
+  {
+    "name": "metrics",
+    "type": "dir"
+  },
+  {
+    "name": "raw",
+    "type": "dir"
+  }
 ]
