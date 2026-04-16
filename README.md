@@ -1,29 +1,15 @@
 # open-data-store
 
-公开数据集存储仓库，支持 CSV/JSON/SQLite/MD 等格式。
+Public dataset repository. Supports CSV / JSON / SQLite / MD formats.
 
-## 目录结构
+## Directories
 
-```
-open-data-store/
-├── README.md
-├── 数据展示/      # 图表可视化配置
-│   └── README.md
-├── 数据采集/      # Node.js 数据采集脚本
-│   └── README.md
-└── 数据存储/      # 数据湖 + 指标
-    ├── 数据湖/    # 原始数据存储
-    └── 指标/     # 加工后的指标数据
-```
+| Directory | Description |
+|-----------|-------------|
+| [display/](display/) | Chart visualization configs (type / style / data source) |
+| [harvest/](harvest/) | Node.js data collection scripts |
+| [storage/](storage/) | Data lake (raw) + metrics (processed) |
 
-## 三大功能
+## Formats
 
-| 目录 | 说明 |
-|------|------|
-| 数据展示 | 图表配置，读取数据后渲染（类型/样式/数据源） |
-| 数据采集 | Node.js 采集脚本，产出数据到数据湖 |
-| 数据存储 | 数据湖（原始数据）+ 指标（加工数据） |
-
-## 数据格式
-
-CSV、JSON、SQLite、MD
+CSV, JSON, SQLite, MD

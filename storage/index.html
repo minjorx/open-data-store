@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Storage - File Listing</title>
+<style>
+body{font-family:system-ui;max-width:800px;margin:40px auto;padding:0 20px}
+h1{border-bottom:1px solid #ddd;padding-bottom:10px}
+h2{margin-top:30px;color:#555}
+a{display:block;padding:8px 0;color:#333;text-decoration:none}
+a:hover{color:#0969da}
+.info{color:#666;font-size:14px;margin-top:5px}
+.back{color:#0969da;margin-bottom:20px}
+</style>
+</head>
+<body>
+<a href="../" class="back">← Back</a>
+<h1>Storage</h1>
+<p>Data lake and metrics storage. Browse or download files.</p>
+
+<h2>Data Lake</h2>
+<div id="data-lake"></div>
+
+<h2>Metrics</h2>
+<div id="metrics"></div>
+
+<script>
+const repo = 'minjorx/open-data-store';
+async function loadDir(elId, path) {
+  const r = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`);
+  const files = await r.json();
+  const el = document.getElementById(elId);
+  if (!files.length) { el.innerHTML = 'empty'; return; }
+  files.forEach(f => {
+    const a = document.createElement('a');
+    a.href = `https://raw.githubusercontent.com/${repo}/main/${path}/` + f.name;
+    a.innerHTML = `<strong>${f.name}</strong><div class="info">${f.type === 'dir' ? 'directory' : 'file · ' + (f.size||0) + ' bytes'} · <a href="https://github.com/${repo}/blob/main/${path}/` + f.name + '">view</a></div>';
+    el.appendChild(a);
+  });
+}
+loadDir('data-lake', 'storage/data-lake');
+loadDir('metrics', 'storage/metrics');
+</script>
+</body>
+</html>
