@@ -4,7 +4,7 @@
 
 ```
 storage/
-├── data-lake/    # Raw data, organized by source
+├── raw/    # Raw data, organized by source
 │   └── worldbank/
 └── metrics/      # Processed / derived data
 ```

@@ -1,4 +1,4 @@
 [
-  { "name": "data-lake", "type": "dir" },
+  { "name": "raw", "type": "dir" },
   { "name": "metrics", "type": "dir" }
 ]
