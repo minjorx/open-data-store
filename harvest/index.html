@@ -42,7 +42,7 @@ async function fetchDir(path, el, indent=0) {
     if (isDir) {
       li.className = 'directory';
       li.innerHTML = `<a href="https://github.com/minjorx/open-data-store/tree/main/${f.path}" style="padding-left:${indentPx}px">📁 ${f.name}/</a>` +
-        `<span class="btns"> · <a href="https://github.com/minjorx/open-data-store/archive/refs/heads/main/${f.path}.zip" download>zip</a></span>`;
+        `<span class="btns"> · <a href="https://github.com/minjorx/open-data-store/tree/main/${f.path}">browse</a></span>`;
       el.appendChild(li);
       const subUl = document.createElement('ul');
       li.appendChild(subUl);
