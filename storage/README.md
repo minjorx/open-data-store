@@ -1,31 +1,33 @@
-# 数据存储
+# Storage
 
-数据湖与指标数据的存储目录。
-
-## 目录结构
+## Structure
 
 ```
-数据存储/
-├── README.md
-├── 数据湖/      # 原始数据，按来源/类型组织
-│   └── raw/     # 未经加工的原始数据
-└── 指标/        # 加工后的指标数据
-    └── metrics/ # 结构化指标文件
+storage/
+├── data-lake/    # Raw data, organized by source
+│   └── worldbank/
+└── metrics/      # Processed / derived data
 ```
 
-## 数据格式
+## Rules
 
-- **CSV** — 适合时序数据和表格数据
-- **JSON** — 适合嵌套结构和配置数据
-- **SQLite** — 适合大量关联数据
-- **MD** — 适合文档和说明性内容
+### data-lake
 
-## 数据引用
+- Source data as-is (download, scrape, API fetch)
+- Subdirectories by data source, not by file format
+- Example: `data-lake/worldbank/2026-04-08-population.csv`
 
-数据文件通过相对路径引用，示例：
+### metrics
 
-```json
-{
-  "data": "./../数据存储/数据湖/example.csv"
-}
-```
+- Output of harvest scripts (cleaned, aggregated, transformed)
+- Example: `metrics/country-population-growth-2024.csv`
+
+## File Naming
+
+- Lowercase with hyphens: `example-data.csv`
+- Date prefix for time-series: `YYYY-MM-DD-description.csv`
+- No spaces or Chinese characters
+
+## index.json
+
+Each directory has an `index.json`. Update it when adding/removing files.
