@@ -33,12 +33,7 @@ function formatSize(bytes) {
   return (bytes / 1024 / 1024).toFixed(1) + 'MB';
 }
 
-async function loadDir(path, el, heading) {
-  if (heading) {
-    const h = document.createElement('h2');
-    h.textContent = heading;
-    el.appendChild(h);
-  }
+async function loadDir(path, el) {
   const ul = document.createElement('ul');
   el.appendChild(ul);
 
@@ -50,8 +45,8 @@ async function loadDir(path, el, heading) {
     if (f.type === 'dir') {
       li.className = 'directory';
       li.innerHTML = `<a href="https://github.com/minjorx/open-data-store/tree/main/storage/${path}${f.name}">📁 ${f.name}/</a>`;
-      el.appendChild(li);
-      loadDir(path + f.name + '/', el, null);
+      ul.appendChild(li);
+      loadDir(path + f.name + '/', li);  // pass li as new parent (creates nested ul inside it)
     } else {
       li.innerHTML = `<a href="https://raw.githubusercontent.com/${repo}/main/storage/${path}${f.name}" download>📄 ${f.name}</a>` +
         `<span class="info"> · ${formatSize(f.size)}</span>` +
@@ -61,7 +56,7 @@ async function loadDir(path, el, heading) {
   });
 }
 
-loadDir('', document.getElementById('tree'), 'raw');
+loadDir('', document.getElementById('tree'));
 </script>
 </body>
 </html>
